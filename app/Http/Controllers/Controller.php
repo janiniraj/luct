@@ -106,9 +106,9 @@ class Controller extends BaseController
      */
     public function ApiSuccessResponse($data = array(), $headers = [])
     {
-        $response['data'] = $data;
-        $response['message'] = $this->getSuccessMessage();
-        $response['code'] = $this->getStatusCode();
+        $response['message']            = $this->getSuccessMessage();
+        $response['code']               = $this->getStatusCode();
+        $response['response']['data']   = $data;
         //return Response::json($response, $this->getStatusCode(), $headers);
         return Response::json($response);
     }
@@ -121,13 +121,15 @@ class Controller extends BaseController
      */
     public function respondWithPagination($data, $paginator)
     {
-        $response['data']       = $data;
         $response['message']    = $this->getSuccessMessage();
+        $response['response']   = [
+            'data'          => $data,
+            'paginator'     => [
+                        'current_page'  => $paginator['current_page'],
+                        'total_pages'   => $paginator['total_pages']
+                    ]
+        ];
         $response['code']       = $this->getStatusCode();
-        $response['paginator']  = [
-                                    'current_page'  => $paginator['current_page'],
-                                    'total_pages'   => $paginator['total_pages']
-                                  ];
 
         return Response::json($response);
     }

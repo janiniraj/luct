@@ -13,15 +13,17 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/login', 'API\ApiController@login');
+
 Route::get('/articles/{page?}', [
     'uses' => 'API\ArticleController@index',
     'as'   => 'article.index'
 ]);
 
-Route::post('/login', 'API\ApiController@login');
+Route::get('/article/{id}', [
+    'uses' => 'API\ArticleController@show',
+    'as'   => 'article.show'
+]);
 
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/check-user', [

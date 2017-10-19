@@ -9,14 +9,25 @@ use JWTAuthException;
 use Ixudra\Curl\Facades\Curl;
 use App\Http\Transformers\ArticleTransformer;
 
+/**
+ * Class ArticleController
+ * @package App\Http\Controllers\API
+ */
 class ArticleController extends Controller
 {
-
+    /**
+     * ArticleController constructor.
+     * @param ArticleTransformer $articleTransformer
+     */
     public function __construct(ArticleTransformer $articleTransformer)
     {
         $this->transformer = $articleTransformer;
     }
 
+    /**
+     * @param Request $request
+     * @return \App\Http\Controllers\mix
+     */
     public function index(Request $request)
     {
         $url    = 'https://www.limkokwing.net/json/articles';
@@ -51,5 +62,11 @@ class ArticleController extends Controller
         {
             return $this->ApiSuccessResponse($data);
         }
+    }
+
+
+    public function show($articleId, Request $request)
+    {
+
     }
 }

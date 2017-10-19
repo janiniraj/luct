@@ -17,8 +17,8 @@ class ArticleTransformer extends Transformer
     public function transform($data)
     {
         return [
+            'id'                => $this->nulltoBlank($data['id']),
             'name'              => $this->nulltoBlank($data['name']),
-            'url'               => $this->nulltoBlank($data['url']),
             'date'              => $this->nulltoBlank($data['date']),
             'thumbnail'         => $this->nulltoBlank($data['thumbnail']),
             'thumbnail_small'   => $this->nulltoBlank($data['thumbnail_small']),
