@@ -94,7 +94,7 @@ class Controller extends BaseController
     public function respond($data, $headers = [])
     {
         //return Response::json($data, $this->getStatusCode(), $headers);
-        return Response::json($data);
+        return Response::json($data,200,$headers,JSON_NUMERIC_CHECK);
     }
 
     /**
@@ -110,7 +110,7 @@ class Controller extends BaseController
         $response['code']               = $this->getStatusCode();
         $response['response']['data']   = $data;
         //return Response::json($response, $this->getStatusCode(), $headers);
-        return Response::json($response);
+        return Response::json($response,200,$headers,JSON_NUMERIC_CHECK);
     }
     /**
      * respond with pagincation
@@ -119,7 +119,7 @@ class Controller extends BaseController
      * @param Paginator $paginator
      * @return mix
      */
-    public function respondWithPagination($data, $paginator)
+    public function respondWithPagination($data, $paginator, $headers = [])
     {
         $response['message']    = $this->getSuccessMessage();
         $response['response']   = [
@@ -131,7 +131,7 @@ class Controller extends BaseController
         ];
         $response['code']       = $this->getStatusCode();
 
-        return Response::json($response);
+        return Response::json($response,200,$headers,JSON_NUMERIC_CHECK);
     }
     /**
      * respond with error
