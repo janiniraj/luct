@@ -6,7 +6,6 @@ use App\Http\Requests;
 use Config;
 use JWTAuth;
 use JWTAuthException;
-use Ixudra\Curl\Facades\Curl;
 use App\Http\Transformers\ArticleTransformer;
 
 /**
@@ -40,9 +39,7 @@ class ArticleController extends Controller
         }
 
         $url        .= "?page=".$page;
-        $response   = Curl::to($url)->get();
-        $xml        = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA);
-        $mainArray  = json_decode(json_encode((array)$xml), TRUE);
+        $mainArray  = $this->getResponseFromUrl($url);
         $articles   = [];
 
         if(isset($mainArray['article']) && !empty($mainArray['article']))
@@ -67,6 +64,18 @@ class ArticleController extends Controller
 
     public function show($articleId, Request $request)
     {
+        $url        = 'https://www.limkokwing.net/json/article_content?id='.$articleId;
+        $mainArray  = $this->getResponseFromUrl($url);
 
+        if($mainArray === false)
+        {
+            return $this->respondInternalError("No Such Article Found.");
+        }
+        else
+        {
+            $data = $this->transformer->transformSingle($mainArray);
+
+            return $this->ApiSuccessResponse($data);
+        }
     }
 }

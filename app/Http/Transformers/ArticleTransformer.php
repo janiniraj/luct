@@ -26,4 +26,32 @@ class ArticleTransformer extends Transformer
             'share'             => $this->nulltoBlank($data['share'])
         ];
     }
+
+    public function transformSingle($data)
+    {
+
+        return [
+            'title'             => $this->nulltoBlank($data['title']),
+            'date'              => $this->nulltoBlank($data['date']),
+            'share'             => $this->nulltoBlank($data['share']),
+            'body'              => $this->nulltoBlank($data['body']),
+            'image'             => $this->nulltoBlank($data['picture']['@attributes']['main']),
+            'gallery'           => $this->getGalleryPictures($data)
+        ];
+    }
+
+    public function getGalleryPictures($data)
+    {
+        $imageList = [];
+
+        if(isset($data['picture']['gallerypic']) && !empty($data['picture']['gallerypic']))
+        {
+            foreach($data['picture']['gallerypic'] as $singlePictureArray)
+            {
+                $imageList[] = $singlePictureArray['@attributes']['url'];
+            }
+        }
+
+        return $imageList;
+    }
 }

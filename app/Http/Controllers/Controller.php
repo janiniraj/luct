@@ -6,7 +6,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Mockery\Exception;
 use Response;
+use Ixudra\Curl\Facades\Curl;
 
 class Controller extends BaseController
 {
@@ -168,5 +170,52 @@ class Controller extends BaseController
     {
         return $this->setStatusCode(422)
             ->respondWithError($message);
+    }
+
+    /**
+     * get Response as Array from URL
+     *
+     * @param $url
+     * @return bool|mixed
+     */
+    public function getResponseFromUrl($url)
+    {
+        $response   = Curl::to($url)->get();
+        if($this->isValidXml($response))
+        {
+            $xml = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA);
+            return json_decode(json_encode((array)$xml), TRUE);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Check Valid XML or not
+     *
+     * @param $content
+     * @return bool
+     */
+    public function isValidXml($content)
+    {
+        $content = trim($content);
+        if (empty($content))
+        {
+            return false;
+        }
+
+        if (stripos($content, '<!DOCTYPE html>') !== false)
+        {
+            return false;
+        }
+
+        libxml_use_internal_errors(true);
+        simplexml_load_string($content);
+        $errors = libxml_get_errors();
+        libxml_clear_errors();
+
+        return empty($errors);
     }
 }
