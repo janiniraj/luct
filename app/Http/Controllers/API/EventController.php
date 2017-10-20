@@ -60,22 +60,4 @@ class EventController extends Controller
             return $this->ApiSuccessResponse($data);
         }
     }
-
-
-    public function show($articleId, Request $request)
-    {
-        $url        = 'https://www.limkokwing.net/json/article_content?id='.$articleId;
-        $mainArray  = $this->getResponseFromUrl($url);
-
-        if($mainArray === false)
-        {
-            return $this->respondInternalError("No Such Article Found.");
-        }
-        else
-        {
-            $data = $this->transformer->transformSingle($mainArray);
-
-            return $this->ApiSuccessResponse($data);
-        }
-    }
 }

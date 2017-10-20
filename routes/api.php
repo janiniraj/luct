@@ -30,17 +30,29 @@ Route::get('/events/{page?}', [
     'as'   => 'event.index'
 ]);
 
+Route::get('/special_features/{page?}', [
+    'uses' => 'API\SpecialFeatureController@index',
+    'as'   => 'special_feature.index'
+]);
 
+Route::get('/special_feature/{id}', [
+    'uses' => 'API\SpecialFeatureController@show',
+    'as'   => 'special_feature.show'
+]);
+Route::post('/bookmark', [
+    'uses' => 'API\BookmarkController@create',
+    'as'   => 'bookmark.create'
+]);
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/check-user', [
         'uses' => 'API\ApiController@checkUser',
         'as'   => 'auth.check-user'
     ]);
 
-    Route::post('/bookmark', [
+    /*Route::post('/bookmark', [
         'uses' => 'API\BookmarkController@create',
         'as'   => 'bookmark.create'
-    ]);
+    ]);*/
 
     Route::post('/remove-bookmark', [
         'uses' => 'API\BookmarkController@remove',

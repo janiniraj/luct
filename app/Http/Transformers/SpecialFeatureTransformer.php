@@ -3,10 +3,10 @@ use App\Http\Transformers\Transformer;
 use URL;
 
 /**
- * Class ArticleTransformer
+ * Class SpecialFeatureTransformer
  * @package App\Http\Transformers
  */
-class ArticleTransformer extends Transformer
+class SpecialFeatureTransformer extends Transformer
 {
     /**
      * Transform Data
@@ -23,8 +23,7 @@ class ArticleTransformer extends Transformer
             'thumbnail'         => $this->nulltoBlank($data['thumbnail']),
             'thumbnail_small'   => $this->nulltoBlank($data['thumbnail_small']),
             'description'       => $this->nulltoBlank($data['description']),
-            'share'             => $this->nulltoBlank($data['share']),
-            'bookmarked'        => $data['bookmarked'] ? 1 : 0
+            'share'             => $this->nulltoBlank($data['share'])
         ];
     }
 
@@ -37,8 +36,7 @@ class ArticleTransformer extends Transformer
             'share'             => $this->nulltoBlank($data['share']),
             'body'              => $this->nulltoBlank($data['body']),
             'image'             => $this->nulltoBlank($data['picture']['@attributes']['main']),
-            'gallery'           => $this->getGalleryPictures($data),
-            'bookmarked'        => $data['bookmarked'] ? 1 : 0
+            'gallery'           => $this->getGalleryPictures($data)
         ];
     }
 

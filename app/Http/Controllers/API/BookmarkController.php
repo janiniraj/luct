@@ -44,6 +44,7 @@ class BookmarkController extends Controller
         $input  = $request->all();
         $user   = JWTAuth::parseToken()->authenticate();
 
+
         if($input['bookmark'])
         {
             $check  = $this->bookmark->where([

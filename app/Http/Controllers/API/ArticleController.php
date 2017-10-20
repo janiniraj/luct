@@ -7,6 +7,7 @@ use Config;
 use JWTAuth;
 use JWTAuthException;
 use App\Http\Transformers\ArticleTransformer;
+use App\Models\Bookmark;
 
 /**
  * Class ArticleController
@@ -20,7 +21,8 @@ class ArticleController extends Controller
      */
     public function __construct(ArticleTransformer $articleTransformer)
     {
-        $this->transformer = $articleTransformer;
+        $this->transformer  = $articleTransformer;
+        $this->bookmark     = new Bookmark();
     }
 
     /**
@@ -40,12 +42,28 @@ class ArticleController extends Controller
 
         $url        .= "?page=".$page;
         $mainArray  = $this->getResponseFromUrl($url);
+
+        if(JWTAuth::getToken())
+        {
+            $user = JWTAuth::parseToken()->authenticate();
+        }
+
         $articles   = [];
 
         if(isset($mainArray['article']) && !empty($mainArray['article']))
         {
             foreach($mainArray['article'] as $key => $value)
             {
+                $value['@attributes']['bookmarked'] = 0;
+
+                if(!empty($user))
+                {
+                    if($this->bookmark->checkArticleBookmarked($value['@attributes']['id'], $user['userid'], $user['usertype']))
+                    {
+                        $value['@attributes']['bookmarked'] = 1;
+                    }
+                }
+
                 $articles[] = $value['@attributes'];
             }
         }
@@ -66,6 +84,15 @@ class ArticleController extends Controller
     {
         $url        = 'https://www.limkokwing.net/json/article_content?id='.$articleId;
         $mainArray  = $this->getResponseFromUrl($url);
+        if(JWTAuth::getToken())
+        {
+            $user = JWTAuth::parseToken()->authenticate();
+            $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($articleId, $user['userid'], $user['usertype']);
+        }
+        else
+        {
+            $mainArray['bookmarked'] = 0;
+        }
 
         if($mainArray === false)
         {
