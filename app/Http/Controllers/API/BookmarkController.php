@@ -28,7 +28,8 @@ class BookmarkController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'article_id' => 'required'
+            'article_id'    => 'required',
+            'bookmark'      => 'required'
         ]);
 
         // If validation fail, throw message
@@ -42,26 +43,55 @@ class BookmarkController extends Controller
 
         $input  = $request->all();
         $user   = JWTAuth::parseToken()->authenticate();
-        $check  = $this->bookmark->where([
-                        'article_id'    => $input['article_id'],
-                        'user_id'       => $user['userid'],
-                        'usertype'      => $user['usertype']
-                    ])->count();
 
-        if($check > 0)
+        if($input['bookmark'])
         {
-            $this->responseCode     = 500;
-            $this->responseMessage  = "Article Already Bookmarked";
-        }
-        else
-        {
-            $this->bookmark->insert([
+            $check  = $this->bookmark->where([
                 'article_id'    => $input['article_id'],
                 'user_id'       => $user['userid'],
                 'usertype'      => $user['usertype']
-            ]);
-            $this->responseMessage  = "Article Successfully Bookmarked";
+            ])->count();
+
+            if($check > 0)
+            {
+                $this->responseCode     = 500;
+                $this->responseMessage  = "Article Already Bookmarked";
+            }
+            else
+            {
+                $this->bookmark->insert([
+                    'article_id'    => $input['article_id'],
+                    'user_id'       => $user['userid'],
+                    'usertype'      => $user['usertype']
+                ]);
+                $this->responseMessage  = "Article Successfully Bookmarked";
+            }
         }
+        else
+        {
+            $check  = $this->bookmark->where([
+                'article_id'    => $input['article_id'],
+                'user_id'       => $user['userid'],
+                'usertype'      => $user['usertype']
+            ])->count();
+
+            if($check > 0)
+            {
+                $this->bookmark->where([
+                    'article_id'    => $input['article_id'],
+                    'user_id'       => $user['userid'],
+                    'usertype'      => $user['usertype']
+                ])->delete();
+
+                $this->responseMessage  = "Article Successfully Removed from Bookmark List";
+            }
+            else
+            {
+                $this->responseCode     = 500;
+                $this->responseMessage  = "No such article in bookmark list.";
+            }
+        }
+
         return $this->result([]);
     }
 

@@ -25,6 +25,12 @@ Route::get('/article/{id}', [
     'as'   => 'article.show'
 ]);
 
+Route::get('/events/{page?}', [
+    'uses' => 'API\EventController@index',
+    'as'   => 'event.index'
+]);
+
+
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/check-user', [
         'uses' => 'API\ApiController@checkUser',
