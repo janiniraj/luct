@@ -75,14 +75,7 @@ class SpecialFeatureController extends Controller
             $mainArray['pagging']['page']['@attributes']['total_pages']     = 1;
         }
 
-        if(isset($mainArray['pagging']['page']['@attributes']) )
-        {
-            return $this->respondWithPagination($data, $mainArray['pagging']['page']['@attributes']);
-        }
-        else
-        {
-            return $this->ApiSuccessResponse($data);
-        }
+        return $this->respondWithPagination($data, $mainArray['pagging']['page']['@attributes']);
     }
 
 

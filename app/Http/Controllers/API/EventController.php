@@ -69,13 +69,12 @@ class EventController extends Controller
         }
         $data = $this->transformer->transformCollection($events);
 
-        if(isset($mainArray['pagging']['page']['@attributes']) )
+        if(!isset($mainArray['pagging']['page']['@attributes']))
         {
-            return $this->respondWithPagination($data, $mainArray['pagging']['page']['@attributes']);
+            $mainArray['pagging']['page']['@attributes']['current_page']    = 1;
+            $mainArray['pagging']['page']['@attributes']['total_pages']     = 1;
         }
-        else
-        {
-            return $this->ApiSuccessResponse($data);
-        }
+
+        return $this->respondWithPagination($data, $mainArray['pagging']['page']['@attributes']);
     }
 }
