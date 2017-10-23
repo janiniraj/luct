@@ -83,15 +83,6 @@ class ArticleController extends Controller
     {
         $url        = 'https://www.limkokwing.net/json/article_content?id='.$articleId;
         $mainArray  = $this->getResponseFromUrl($url);
-        if(JWTAuth::getToken())
-        {
-            $user = JWTAuth::parseToken()->authenticate();
-            $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($articleId, $user['userid'], $user['usertype']);
-        }
-        else
-        {
-            $mainArray['bookmarked'] = 0;
-        }
 
         if($mainArray === false)
         {
@@ -99,6 +90,16 @@ class ArticleController extends Controller
         }
         else
         {
+            if(JWTAuth::getToken())
+            {
+                $user = JWTAuth::parseToken()->authenticate();
+                $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($articleId, $user['userid'], $user['usertype']);
+            }
+            else
+            {
+                $mainArray['bookmarked'] = 0;
+            }
+
             $data = $this->transformer->transformSingle($mainArray);
 
             return $this->ApiSuccessResponse($data);

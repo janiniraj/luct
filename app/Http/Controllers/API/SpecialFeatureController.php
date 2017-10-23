@@ -84,22 +84,22 @@ class SpecialFeatureController extends Controller
         $url        = 'https://www.limkokwing.net/json/sf_content?id='.$specialFeatureId;
         $mainArray  = $this->getResponseFromUrl($url);
 
-        if(JWTAuth::getToken())
-        {
-            $user = JWTAuth::parseToken()->authenticate();
-            $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($specialFeatureId, $user['userid'], $user['usertype']);
-        }
-        else
-        {
-            $mainArray['bookmarked'] = 0;
-        }
-
         if($mainArray === false)
         {
             return $this->respondInternalError("No Such Special Feature Found.");
         }
         else
         {
+            if(JWTAuth::getToken())
+            {
+                $user = JWTAuth::parseToken()->authenticate();
+                $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($specialFeatureId, $user['userid'], $user['usertype']);
+            }
+            else
+            {
+                $mainArray['bookmarked'] = 0;
+            }
+
             $data = $this->transformer->transformSingle($mainArray);
 
             return $this->ApiSuccessResponse($data);
