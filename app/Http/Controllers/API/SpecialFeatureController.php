@@ -54,6 +54,8 @@ class SpecialFeatureController extends Controller
         {
             foreach($mainArray['article'] as $key => $value)
             {
+                $value['@attributes']['bookmarked'] = 0;
+                
                 if(isset($user) && !empty($user))
                 {
                     if($this->bookmark->checkArticleBookmarked($value['@attributes']['id'], $user['userid'], $user['usertype']))
