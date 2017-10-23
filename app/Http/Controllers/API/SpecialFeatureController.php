@@ -7,6 +7,7 @@ use Config;
 use JWTAuth;
 use JWTAuthException;
 use App\Http\Transformers\SpecialFeatureTransformer;
+use App\Models\Bookmark;
 
 /**
  * Class SpecialFeatureController
@@ -20,7 +21,8 @@ class SpecialFeatureController extends Controller
      */
     public function __construct(SpecialFeatureTransformer $specialFeatureTransformer)
     {
-        $this->transformer = $specialFeatureTransformer;
+        $this->transformer  = $specialFeatureTransformer;
+        $this->bookmark     = new Bookmark();
     }
 
     /**
@@ -40,12 +42,26 @@ class SpecialFeatureController extends Controller
 
         $url        .= "?page=".$page;
         $mainArray  = $this->getResponseFromUrl($url);
+
+        if(JWTAuth::getToken())
+        {
+            $user = JWTAuth::parseToken()->authenticate();
+        }
+
         $specialFeatures   = [];
 
         if(isset($mainArray['article']) && !empty($mainArray['article']))
         {
             foreach($mainArray['article'] as $key => $value)
             {
+                if(isset($user) && !empty($user))
+                {
+                    if($this->bookmark->checkArticleBookmarked($value['@attributes']['id'], $user['userid'], $user['usertype']))
+                    {
+                        $value['@attributes']['bookmarked'] = 1;
+                    }
+                }
+
                 $specialFeatures[] = $value['@attributes'];
             }
         }
@@ -66,6 +82,16 @@ class SpecialFeatureController extends Controller
     {
         $url        = 'https://www.limkokwing.net/json/sf_content?id='.$specialFeatureId;
         $mainArray  = $this->getResponseFromUrl($url);
+
+        if(JWTAuth::getToken())
+        {
+            $user = JWTAuth::parseToken()->authenticate();
+            $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($specialFeatureId, $user['userid'], $user['usertype']);
+        }
+        else
+        {
+            $mainArray['bookmarked'] = 0;
+        }
 
         if($mainArray === false)
         {

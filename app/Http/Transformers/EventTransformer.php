@@ -26,7 +26,8 @@ class EventTransformer extends Transformer
             'share'             => $this->nulltoBlank($data['share']),
             'start_time'        => $this->nulltoBlank($data['start_time']),
             'end_time'          => $this->nulltoBlank($data['end_time']),
-            'events_venue'      => $this->nulltoBlank($data['events_venue'])
+            'events_venue'      => $this->nulltoBlank($data['events_venue']),
+            'bookmarked'        => $data['bookmarked'] ? 1 : 0
         ];
     }
 
@@ -39,7 +40,8 @@ class EventTransformer extends Transformer
             'share'             => $this->nulltoBlank($data['share']),
             'body'              => $this->nulltoBlank($data['body']),
             'image'             => $this->nulltoBlank($data['picture']['@attributes']['main']),
-            'gallery'           => $this->getGalleryPictures($data)
+            'gallery'           => $this->getGalleryPictures($data),
+            'bookmarked'        => $data['bookmarked'] ? 1 : 0
         ];
     }
 

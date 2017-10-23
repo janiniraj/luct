@@ -56,7 +56,7 @@ class ArticleController extends Controller
             {
                 $value['@attributes']['bookmarked'] = 0;
 
-                if(!empty($user))
+                if(isset($user) && !empty($user))
                 {
                     if($this->bookmark->checkArticleBookmarked($value['@attributes']['id'], $user['userid'], $user['usertype']))
                     {

@@ -7,6 +7,7 @@ use Config;
 use JWTAuth;
 use JWTAuthException;
 use App\Http\Transformers\EventTransformer;
+use App\Models\Bookmark;
 
 /**
  * Class EventController
@@ -20,7 +21,8 @@ class EventController extends Controller
      */
     public function __construct(EventTransformer $eventTransformer)
     {
-        $this->transformer = $eventTransformer;
+        $this->transformer  = $eventTransformer;
+        $this->bookmark     = new Bookmark();
     }
 
     /**
@@ -40,12 +42,28 @@ class EventController extends Controller
 
         $url        .= "?page=".$page;
         $mainArray  = $this->getResponseFromUrl($url);
+
+        if(JWTAuth::getToken())
+        {
+            $user = JWTAuth::parseToken()->authenticate();
+        }
+
         $events   = [];
 
         if(isset($mainArray['event']) && !empty($mainArray['event']))
         {
             foreach($mainArray['event'] as $key => $value)
             {
+                $value['@attributes']['bookmarked'] = 0;
+
+                if(isset($user) && !empty($user))
+                {
+                    if($this->bookmark->checkArticleBookmarked($value['@attributes']['id'], $user['userid'], $user['usertype']))
+                    {
+                        $value['@attributes']['bookmarked'] = 1;
+                    }
+                }
+
                 $events[] = $value['@attributes'];
             }
         }

@@ -23,7 +23,8 @@ class SpecialFeatureTransformer extends Transformer
             'thumbnail'         => $this->nulltoBlank($data['thumbnail']),
             'thumbnail_small'   => $this->nulltoBlank($data['thumbnail_small']),
             'description'       => $this->nulltoBlank($data['description']),
-            'share'             => $this->nulltoBlank($data['share'])
+            'share'             => $this->nulltoBlank($data['share']),
+            'bookmarked'        => $data['bookmarked'] ? 1 : 0
         ];
     }
 
@@ -36,7 +37,8 @@ class SpecialFeatureTransformer extends Transformer
             'share'             => $this->nulltoBlank($data['share']),
             'body'              => $this->nulltoBlank($data['body']),
             'image'             => $this->nulltoBlank($data['picture']['@attributes']['main']),
-            'gallery'           => $this->getGalleryPictures($data)
+            'gallery'           => $this->getGalleryPictures($data),
+            'bookmarked'        => $data['bookmarked'] ? 1 : 0
         ];
     }
 
