@@ -55,7 +55,7 @@ class SpecialFeatureController extends Controller
             foreach($mainArray['article'] as $key => $value)
             {
                 $value['@attributes']['bookmarked'] = 0;
-                
+
                 if(isset($user) && !empty($user))
                 {
                     if($this->bookmark->checkArticleBookmarked($value['@attributes']['id'], $user['userid'], $user['usertype']))
@@ -68,6 +68,12 @@ class SpecialFeatureController extends Controller
             }
         }
         $data = $this->transformer->transformCollection($specialFeatures);
+
+        if(!isset($mainArray['pagging']['page']['@attributes']))
+        {
+            $mainArray['pagging']['page']['@attributes']['current_page']    = 1;
+            $mainArray['pagging']['page']['@attributes']['total_pages']     = 1;
+        }
 
         if(isset($mainArray['pagging']['page']['@attributes']) )
         {
