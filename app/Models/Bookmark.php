@@ -21,11 +21,18 @@ class Bookmark extends Model
         'usertype'
     ];
 
-
-    public function checkArticleBookmarked($artcleId, $userId, $userType)
+    /**
+     * Check Article Bookmarked or Not
+     *
+     * @param $articleId
+     * @param $userId
+     * @param $userType
+     * @return bool
+     */
+    public function checkArticleBookmarked($articleId, $userId, $userType)
     {
         $check  = $this->where([
-            'article_id'    => $artcleId,
+            'article_id'    => $articleId,
             'user_id'       => $userId,
             'usertype'      => $userType
         ])->count();

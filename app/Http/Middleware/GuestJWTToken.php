@@ -8,7 +8,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Illuminate\Support\Facades\Config;
 
-class VerifyJWTToken
+class GuestJWTToken
 {
     /**
      * Handle an incoming request.
@@ -31,8 +31,14 @@ class VerifyJWTToken
             Config::set('jwt.user','App\Models\Student');
             Config::set('jwt.identifier','StudentID');
         }
+
         $token = JWTAuth::getToken();
-        dd(JWTAuth::toUser($token));
+
+        if(!$token)
+        {
+            return $next($request);
+        }
+
         try
         {
             if (! $user = JWTAuth::toUser($token))

@@ -41,16 +41,26 @@ class BookmarkController extends Controller
             return $this->result([]);
         }
 
-        $input  = $request->all();
-        $user   = JWTAuth::parseToken()->authenticate();
+        $input      = $request->all();
+        $user       = JWTAuth::parseToken()->authenticate();
+dd($user);
+        $userType   = $request->header('user-type') ? $request->header('user-type') : 'student';
 
+        if($userType == 'member')
+        {
+            $userId = $user->userid;
+        }
+        else
+        {
+            $userId = $user->StudentID;
+        }
 
         if($input['bookmark'])
         {
             $check  = $this->bookmark->where([
                 'article_id'    => $input['article_id'],
-                'user_id'       => $user['userid'],
-                'usertype'      => $user['usertype']
+                'user_id'       => $userId,
+                'usertype'      => $userType
             ])->count();
 
             if($check > 0)
@@ -62,8 +72,8 @@ class BookmarkController extends Controller
             {
                 $this->bookmark->insert([
                     'article_id'    => $input['article_id'],
-                    'user_id'       => $user['userid'],
-                    'usertype'      => $user['usertype']
+                    'user_id'       => $userId,
+                    'usertype'      => $userType
                 ]);
                 $this->responseMessage  = "Article Successfully Bookmarked";
             }
@@ -72,16 +82,16 @@ class BookmarkController extends Controller
         {
             $check  = $this->bookmark->where([
                 'article_id'    => $input['article_id'],
-                'user_id'       => $user['userid'],
-                'usertype'      => $user['usertype']
+                'user_id'       => $userId,
+                'usertype'      => $userType
             ])->count();
 
             if($check > 0)
             {
                 $this->bookmark->where([
                     'article_id'    => $input['article_id'],
-                    'user_id'       => $user['userid'],
-                    'usertype'      => $user['usertype']
+                    'user_id'       => $userId,
+                    'usertype'      => $userType
                 ])->delete();
 
                 $this->responseMessage  = "Article Successfully Removed from Bookmark List";

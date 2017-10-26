@@ -20,7 +20,8 @@ class UserTransformer extends Transformer
     public function transformToken($data)
     {
         return[
-            'token' => $data
+            'token' => $data['token'],
+            'type'  => $data['type']
         ];
     }
 }

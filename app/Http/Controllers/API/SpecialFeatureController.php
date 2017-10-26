@@ -45,7 +45,17 @@ class SpecialFeatureController extends Controller
 
         if(JWTAuth::getToken())
         {
-            $user = JWTAuth::parseToken()->authenticate();
+            $user       = JWTAuth::parseToken()->authenticate();
+            $userType   = $request->header('user-type') ? $request->header('user-type') : 'student';
+
+            if($userType == 'member')
+            {
+                $userId = $user->userid;
+            }
+            else
+            {
+                $userId = $user->StudentID;
+            }
         }
 
         $specialFeatures   = [];
@@ -58,7 +68,7 @@ class SpecialFeatureController extends Controller
 
                 if(isset($user) && !empty($user))
                 {
-                    if($this->bookmark->checkArticleBookmarked($value['@attributes']['id'], $user['userid'], $user['usertype']))
+                    if($this->bookmark->checkArticleBookmarked($value['@attributes']['id'], $userId, $userType))
                     {
                         $value['@attributes']['bookmarked'] = 1;
                     }
@@ -92,8 +102,18 @@ class SpecialFeatureController extends Controller
         {
             if(JWTAuth::getToken())
             {
-                $user = JWTAuth::parseToken()->authenticate();
-                $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($specialFeatureId, $user['userid'], $user['usertype']);
+                $user       = JWTAuth::parseToken()->authenticate();
+                $userType   = $request->header('user-type') ? $request->header('user-type') : 'student';
+
+                if($userType == 'member')
+                {
+                    $userId = $user->userid;
+                }
+                else
+                {
+                    $userId = $user->StudentID;
+                }
+                $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($specialFeatureId, $userId, $userType);
             }
             else
             {

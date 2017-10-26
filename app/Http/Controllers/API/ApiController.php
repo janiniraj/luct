@@ -139,4 +139,79 @@ class ApiController extends Controller
 
         return true;
     }
+
+    public function memberLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'username'      => 'required',
+            'password'      => 'required',
+            'device_type'   => 'required'
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondInternalError("Invalid Input !");
+        }
+
+        $credentials    = $request->only('username', 'password');
+
+        Config::set('auth.providers.users.model',\App\Models\Member::class);
+        Config::set('jwt.user','App\Models\Member');
+        Config::set('jwt.identifier','userid');
+
+        $user = $this->member->where(['username' => $credentials['username'], 'pword' => md5($credentials['password'])])->get()->first();
+
+        if($user)
+        {
+            if($user->login_status == 0)
+            {
+                $this->createLoginAttempt($request, 0, 3);
+
+                return $this->respondInternalError("Your Access is Blocked, If you have any questions, please contact us.");
+            }
+
+            $this->createLoginAttempt($request, 1, 3);
+
+            $token = JWTAuth::fromUser($user);
+            return $this->ApiSuccessResponse([
+                'token' => $token,
+                'type'  => 'member'
+            ]);
+        }
+        else
+        {
+            return $this->respondInternalError("No Such User Found.");
+        }
+    }
+
+    public function studentLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'username'      => 'required',
+            'password'      => 'required',
+            'device_type'   => 'required'
+        ]);
+
+        if ($validator->fails())
+        {
+            return $this->respondInternalError("Invalid Input !");
+        }
+
+        $credentials    = $request->only('username', 'password');
+        $user = $this->student->where(['Username' => $credentials['username'], 'Passwd' => md5($credentials['password'])])->get()->first();
+        if($user)
+        {
+            $this->createLoginAttempt($request, 1, 1);
+
+            $token = JWTAuth::fromUser($user);
+            return $this->ApiSuccessResponse([
+                'token' => $token,
+                'type'  => 'student'
+            ]);
+        }
+        else
+        {
+            return $this->respondInternalError("No Such User Found.");
+        }
+    }
 }
