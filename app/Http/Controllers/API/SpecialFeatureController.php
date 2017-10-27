@@ -26,6 +26,8 @@ class SpecialFeatureController extends Controller
     }
 
     /**
+     * Special Feayure List
+     *
      * @param Request $request
      * @return \App\Http\Controllers\mix
      */
@@ -88,7 +90,13 @@ class SpecialFeatureController extends Controller
         return $this->respondWithPagination($data, $mainArray['pagging']['page']['@attributes']);
     }
 
-
+    /**
+     * Show Special Feature Detail
+     *
+     * @param Int $specialFeatureId
+     * @param Request $request
+     * @return \App\Http\Controllers\mix
+     */
     public function show($specialFeatureId, Request $request)
     {
         $url        = 'https://www.limkokwing.net/json/sf_content?id='.$specialFeatureId;

@@ -43,7 +43,7 @@ class BookmarkController extends Controller
 
         $input      = $request->all();
         $user       = JWTAuth::parseToken()->authenticate();
-dd($user);
+
         $userType   = $request->header('user-type') ? $request->header('user-type') : 'student';
 
         if($userType == 'member')
