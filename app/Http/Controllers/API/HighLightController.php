@@ -6,7 +6,7 @@ use App\Http\Requests;
 use Config;
 use JWTAuth;
 use JWTAuthException;
-use App\Http\Transformers\ArticleTransformer;
+use App\Http\Transformers\HighLightTransformer;
 use App\Models\Bookmark;
 
 /**
@@ -19,11 +19,11 @@ class HighLightController extends Controller
     /**
      * HighLightController constructor.
      *
-     * @param ArticleTransformer $articleTransformer
+     * @param HighLightTransformer $highLightTransformer
      */
-    public function __construct(ArticleTransformer $articleTransformer)
+    public function __construct(HighLightTransformer $highLightTransformer)
     {
-        $this->transformer  = $articleTransformer;
+        $this->transformer  = $highLightTransformer;
         $this->bookmark     = new Bookmark();
     }
 
@@ -35,7 +35,7 @@ class HighLightController extends Controller
      */
     public function index(Request $request)
     {
-        $url    = 'https://www.limkokwing.net/json/articles';
+        $url    = 'https://www.limkokwing.net/json/highlights';
         $input  = $request->all();
         $page   = 1;
 
@@ -46,7 +46,7 @@ class HighLightController extends Controller
 
         $url        .= "?page=".$page;
         $mainArray  = $this->getResponseFromUrl($url);
-        dd($mainArray);
+
         if(JWTAuth::getToken())
         {
             $user       = JWTAuth::parseToken()->authenticate();

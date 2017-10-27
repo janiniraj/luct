@@ -36,10 +36,14 @@ class EventTransformer extends Transformer
 
         return [
             'title'             => $this->nulltoBlank($data['title']),
-            'date'              => $this->nulltoBlank($data['date']),
+            'start_date'        => $this->nulltoBlank($data['start_date']),
+            'end_date'          => $this->nulltoBlank($data['end_date']),
+            'venue'             => $this->nulltoBlank($data['venue']),
+            'start_time'        => $this->nulltoBlank($data['start_time']),
+            'end_time'          => $this->nulltoBlank($data['end_time']),
             'share'             => $this->nulltoBlank($data['share']),
             'body'              => $this->nulltoBlank($data['body']),
-            'image'             => $this->nulltoBlank($data['picture']['@attributes']['main']),
+            'image'             => $this->nulltoBlank($data['picture']['@attributes']['image']),
             'gallery'           => $this->getGalleryPictures($data),
             'bookmarked'        => $data['bookmarked'] ? 1 : 0
         ];

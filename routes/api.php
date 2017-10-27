@@ -70,6 +70,11 @@ Route::group(['middleware' => 'jwt.guest'], function()
         'as'   => 'event.index'
     ]);
 
+    Route::get('/event/{id}', [
+        'uses' => 'API\EventController@show',
+        'as'   => 'event.show'
+    ]);
+
     Route::get('/special_features/{page?}', [
         'uses' => 'API\SpecialFeatureController@index',
         'as'   => 'special_feature.index'

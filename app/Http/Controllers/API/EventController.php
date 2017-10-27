@@ -87,4 +87,41 @@ class EventController extends Controller
 
         return $this->respondWithPagination($data, $mainArray['pagging']['page']['@attributes']);
     }
+
+    public function show($eventId, Request $request)
+    {
+        $url        = 'https://www.limkokwing.net/json/event_content?id='.$eventId;
+        $mainArray  = $this->getResponseFromUrl($url);
+
+        if($mainArray === false)
+        {
+            return $this->respondInternalError("No Such Article Found.");
+        }
+        else
+        {
+            if(JWTAuth::getToken())
+            {
+                $user       = JWTAuth::parseToken()->authenticate();
+                $userType   = $request->header('user-type') ? $request->header('user-type') : 'student';
+
+                if($userType == 'member')
+                {
+                    $userId = $user->userid;
+                }
+                else
+                {
+                    $userId = $user->StudentID;
+                }
+                $mainArray['bookmarked'] = $this->bookmark->checkArticleBookmarked($eventId, $userId, $userType);
+            }
+            else
+            {
+                $mainArray['bookmarked'] = 0;
+            }
+
+            $data = $this->transformer->transformSingle($mainArray);
+
+            return $this->ApiSuccessResponse($data);
+        }
+    }
 }
