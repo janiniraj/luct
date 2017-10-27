@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Middleware;
+<?php namespace App\Http\Middleware;
 
 use Closure;
 use JWTAuth;
@@ -32,7 +30,6 @@ class VerifyJWTToken
             Config::set('jwt.identifier','StudentID');
         }
         $token = JWTAuth::getToken();
-        dd(JWTAuth::toUser($token));
         try
         {
             if (! $user = JWTAuth::toUser($token))

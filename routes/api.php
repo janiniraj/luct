@@ -79,4 +79,9 @@ Route::group(['middleware' => 'jwt.guest'], function()
         'uses' => 'API\SpecialFeatureController@show',
         'as'   => 'special_feature.show'
     ]);
+
+    Route::get('/highlights', [
+        'uses' => 'API\HighLightController@index',
+        'as'   => 'highlight.index'
+    ]);
 });
