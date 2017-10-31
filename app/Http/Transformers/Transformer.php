@@ -1,8 +1,8 @@
 <?php namespace App\Http\Transformers;
 abstract class Transformer {
-    public function transformCollection($items)
+    public function transformCollection($items, $function = 'transform')
     {
-        return array_map([$this, 'transform'], $items);
+        return array_map([$this, $function], $items);
     }
     public abstract function transform($item);
 

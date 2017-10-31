@@ -201,6 +201,25 @@ class ApiController extends Controller
         $user = $this->student->where(['Username' => $credentials['username'], 'Passwd' => md5($credentials['password'])])->get()->first();
         if($user)
         {
+            //current month & year
+            $currDate   = date("Y-m-d");
+            $currDay    = date("d");
+            $currMonth  = date("m");
+            $currYear   = date("Y");
+
+            //next month & year
+            if ($currMonth == "12")
+            {
+                $nextMonth = "01";
+                $nextYear  = $currYear+1;
+            }
+            else
+            {
+                $nextMonth = date("n") + 1;
+                $nextYear  = $currYear;
+            }
+            $nextDate = $nextYear-$nextMonth-$currDay;
+
             $this->createLoginAttempt($request, 1, 1);
 
             $token = JWTAuth::fromUser($user);

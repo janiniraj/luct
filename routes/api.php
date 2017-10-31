@@ -89,4 +89,9 @@ Route::group(['middleware' => 'jwt.guest'], function()
         'uses' => 'API\HighLightController@index',
         'as'   => 'highlight.index'
     ]);
+
+    Route::get('/courses', [
+        'uses' => 'API\CourseController@index',
+        'as'   => 'course.index'
+    ]);
 });
