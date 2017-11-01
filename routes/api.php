@@ -94,4 +94,9 @@ Route::group(['middleware' => 'jwt.guest'], function()
         'uses' => 'API\CourseController@index',
         'as'   => 'course.index'
     ]);
+
+    Route::get('/course/{id}', [
+        'uses' => 'API\CourseController@show',
+        'as'   => 'course.show'
+    ]);
 });

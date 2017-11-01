@@ -38,4 +38,22 @@ class CourseController extends Controller
 
         return $this->respond($data);
     }
+
+    public function show($courseId, Request $request)
+    {
+        $url        = 'https://www.limkokwing.net/json/courses_details?id='.$courseId;
+        $mainArray  = $this->getResponseFromUrl($url);
+
+        if($mainArray === false)
+        {
+            return $this->respondInternalError("No Such Course Found.");
+        }
+        else
+        {
+
+            $data = $this->transformer->transformSingle($mainArray);
+
+            return $this->ApiSuccessResponse($data);
+        }
+    }
 }

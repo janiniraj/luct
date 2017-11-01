@@ -107,4 +107,39 @@ class CourseTransformer extends Transformer
             'url'               => $this->nulltoBlank($data['@attributes']['url']),
         ];
     }
+
+    public function transformSingle($data)
+    {
+        return [
+            'name'              => $this->nulltoBlank($data['name']),
+            'share'             => $this->nulltoBlank($data['share']),
+            'body'              => $this->nulltoBlank($data['body']),
+            'gallery'           => $this->getGalleryPictures($data),
+            'code'              => $this->nulltoBlank($data['code']),
+            'faculty'           => $this->nulltoBlank($data['faculty']),
+            'availability'      => $this->nulltoBlank($data['availability']),
+        ];
+    }
+
+    /**
+     * Get gallery Pictures
+     *
+     * @param $data
+     * @return array
+     */
+    public function getGalleryPictures($data)
+    {
+        $imageList = [];
+
+        if(isset($data['picture']['img']) && !empty($data['picture']['img']))
+        {
+            foreach($data['picture']['img'] as $singlePictureArray)
+            {
+                $imageList[] = $singlePictureArray['@attributes']['url'];
+            }
+        }
+
+        return $imageList;
+    }
+
 }
