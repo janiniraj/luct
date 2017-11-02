@@ -63,6 +63,7 @@ class ArticleTransformer extends Transformer
             'country_name'              => $this->nulltoBlank($data['@attributes']['name']),
             'image'                     => $this->nulltoBlank($data['discover']['@attributes']['image']),
             'about_country_billboard'   => $this->nulltoBlank($data['discover']['about_country_billboard']),
+            'about_country_experience'   => $this->nulltoBlank($data['discover']['about_country_experience']),
         ];
     }
 }
