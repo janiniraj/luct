@@ -125,4 +125,14 @@ class ArticleController extends Controller
             return $this->ApiSuccessResponse($data);
         }
     }
+
+    public function discoverMalaysia()
+    {
+        $url        = 'https://www.limkokwing.net/json/discover_malaysia';
+        $mainArray  = $this->getResponseFromUrl($url);
+
+        $data = $this->transformer->transformDiscoverMalaysia($mainArray['country']);
+
+        return $this->ApiSuccessResponse($data);
+    }
 }

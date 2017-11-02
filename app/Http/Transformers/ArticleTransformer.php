@@ -56,4 +56,13 @@ class ArticleTransformer extends Transformer
 
         return $imageList;
     }
+
+    public function transformDiscoverMalaysia($data)
+    {
+        return [
+            'country_name'              => $this->nulltoBlank($data['@attributes']['name']),
+            'image'                     => $this->nulltoBlank($data['discover']['@attributes']['image']),
+            'about_country_billboard'   => $this->nulltoBlank($data['discover']['about_country_billboard']),
+        ];
+    }
 }

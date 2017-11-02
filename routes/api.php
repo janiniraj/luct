@@ -104,4 +104,10 @@ Route::group(['middleware' => 'jwt.guest'], function()
         'uses' => 'API\FacilityController@index',
         'as'   => 'facility.index'
     ]);
+
+    Route::get('/discover_malaysia', [
+        'uses' => 'API\ArticleController@discoverMalaysia',
+        'as'   => 'article.discover_malaysia'
+    ]);
+
 });
