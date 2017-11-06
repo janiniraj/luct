@@ -45,6 +45,11 @@ Route::group(['middleware' => 'jwt.auth'], function()
         'uses' => 'API\BookmarkController@remove',
         'as'   => 'bookmark.remove'
     ]);
+
+    Route::get('/refresh-token', [
+        'uses' => 'API\ApiController@refreshToken',
+        'as'   => 'auth.refresh-token'
+    ]);
 });
 
 /*

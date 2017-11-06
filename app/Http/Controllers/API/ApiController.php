@@ -233,4 +233,28 @@ class ApiController extends Controller
             return $this->respondInternalError("No Such User Found.");
         }
     }
+
+    public function refreshToken(Request $request)
+    {
+        if($request->header('user-type') == 'member')
+        {
+            Config::set('auth.providers.users.model',\App\Models\Member::class);
+            Config::set('jwt.user','App\Models\Member');
+            Config::set('jwt.identifier','userid');
+        }
+        else
+        {
+            Config::set('auth.providers.users.model',\App\Models\Student::class);
+            Config::set('jwt.user','App\Models\Student');
+            Config::set('jwt.identifier','StudentID');
+        }
+        $refreshed = JWTAuth::refresh(JWTAuth::getToken());
+
+        JWTAuth::setToken($refreshed);
+
+        return $this->ApiSuccessResponse([
+            'token' => $refreshed,
+            'type'  => $request->header('user-type')
+        ]);
+    }
 }
